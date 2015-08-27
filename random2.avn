@@ -1,0 +1,190 @@
+(+ 100 2)
+
+0x1064
+0x1102
+0x2201
+
+(+ 100 (+ 100 10))
+
+0x1064
+0x1164
+0x020A
+0x2112
+0x2001
+
+(+ 100 2)
+
+0x6000
+0x1164
+0x1202
+0x3010
+0x5010
+
+(+ 100 (+ 100 10))
+
+0x6000 // Load reference to '+' to register 0
+0x1164 // Load imm 100 to register 1
+0x6200 // Load reference to '+' to register 2
+0x1364 // Load imm 100 to register 3
+0x140A // Load imm 10 to register 4
+0x3230 // Call register 2 ('+') with arguments starting at register 3
+0x5230 // Move contents of register 3 (result of +) to register 2
+0x3010 // Call register 0 ('+') with arguments starting at register 1
+0x5010 // Move contents of register 1 (result of +) to register 0
+
+(foo 100 (bar 100 10))
+
+0x6000 // Load bar to register 0
+0x1164 // Load 100 to register 1
+0x120A // Load 10 to register 2
+0x3010 // Call bar
+0x5100 // Move contents of register 0 to register 1 (returned from bar)
+0x1264 // Load 100 to register 1
+0x6010 // Load foo to register 0
+0x3010 // Call foo
+
+(foo (bar 10 20) (baz 100 200))
+
+(foo (bar (baz 20 20) 30) (baz 100 200))
+
+0x6000 // Load foo to register 0
+0x6110 // Load bar to register 1
+0x6220 // Load baz to register 2
+0x1314 // Load 20 to register 4
+0x1414 // Load 20 to register 5
+0x3230 // Call baz with arguments at 3 (return value goes to register 2)
+0x131D // Load 30 to register 3
+0x3120 // Call bar with arguments at 2 (return value goes to register 1)
+0x6230 // Load baz to register 2
+0x1364 // Load 100 to register 3
+0x13C8 // Load 200 to register 4
+0x3230 // Call baz (register 2) with arguments at 2
+0x3010 // Call foo (register 0) with arguments at 1
+
+(foo (bar (baz 20 20) 30) (baz 100 200))
+
+Load foo to register 0
+Load bar to register 1
+Load baz to register 2
+Load 20 to register 3
+Load 20 to register 4
+Call register 2
+Load 30 to register 3
+Call register 1
+Load baz to register 2
+Load 100 to register 3
+Load 200 to register 4
+Call register 2
+Call register 0
+
+(foo (bar (baz 20 20) (qux 10 30)) (baz 100 200))
+
+Load foo to register 0
+Load bar to register 1
+Load baz to register 2
+Load 20 to register 3
+Load 20 to register 4
+Call register 2 (baz)
+Load qux to register 3
+Load 10 to register 4
+Load 30 to register 5
+Call register 3 (qux)
+Call register 1
+Load baz to register 2
+Load 100 to register 3
+Load 200 to register 4
+Call register 2
+Call register 0
+
+(foo (bar (baz 20 20) (qux 10 30)) (baz 100 200) (qux 5 10))
+
+Load foo to register 0
+Load bar to register 1
+Load baz to register 2
+Load 20 to register 3
+Load 20 to register 4
+Call register 2 (baz)
+Load qux to register 3
+Load 10 to register 4
+Load 30 to register 5
+Call register 3 (qux)
+Call register 1
+Load baz to register 2
+Load 100 to register 3
+Load 200 to register 4
+Call register 2
+Load qux to register 3
+Load 5 to register 4
+Load 10 to register 5
+Call register 3
+Call register 0
+
+(let
+  ((a (baz 20 20))
+   (b (bar a 30))
+   (c (baz 100 200)))
+  (foo b c))
+
+(let
+  (('2 (baz 20 20))
+   ('0 (bar '2 30))
+   ('1 (baz 100 200)))
+  (foo '0 '1)
+
+(let
+  ((a (baz))
+   (b (a))
+   (c (b 12)))
+  (c))
+
+(define baz (a b k)
+  (k (+ a b))
+
+(define main (k)
+  (baz 20 20
+    (fn (x1)
+      (bar x1 30
+        (fn (x2)
+          (baz 100 200
+            (fn (x3)
+              (foo x2 x3))))))))
+
+main: 1 argument, 0 free variables
+fn1: 1 argument, 0 free variables
+fn2: 1 argument, 0 free variables
+fn3: 1 argument, 1 free variable
+
+* Push reference to foo to register 0
+* Allocate closure and push to register 1
+* Push "4" to register 2
+* Call register 0
+
+(struct closure
+  :code [foo bar baz qux]
+  :env [constant-1 constant-2]
+  :constant-count 2
+  :arg-count 2)
+
+;; CPS
+
+(define (remainder k n d)
+  (if (< n d)
+    (k n)
+    (remainder k (- n d) d)))
+
+(define (gcd k a b)
+  (if (= b 0)
+    (k a)
+    (remainder (fn (x1) (gcd k b x1)) a b)))
+
+;; Non-CPS
+
+(define (remainder n d)
+  (if (< n d)
+  n
+  (remainder (- n d) d)))
+
+(define (gcd a b)
+  (if (= b 0)
+    a
+    (gcd b (remainder a b))))

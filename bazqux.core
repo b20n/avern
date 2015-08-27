@@ -1,0 +1,82 @@
+module 'bazqux' ['fish'/1,
+		 'inc'/1,
+		 'module_info'/0,
+		 'module_info'/1,
+		 'one'/2]
+    attributes []
+'inc'/1 =
+    %% Line 4
+    fun (_cor0) ->
+	case _cor0 of
+	  <'i'> when 'true' ->
+	      5
+	  ( <_cor1> when 'true' ->
+		( primop 'match_fail'
+		      ({'function_clause',_cor1})
+		  -| [{'function_name',{'inc',1}}] )
+	    -| ['compiler_generated'] )
+	end
+'one'/2 =
+    %% Line 7
+    fun (_cor1,_cor0) ->
+	case <_cor1,_cor0> of
+	  <'j','k'> when 'true' ->
+	      let <X> =
+		  %% Line 8
+		  ( fun () ->
+			45
+		    -| [{'id',{0,0,'-one/2-fun-0-'}}] )
+	      in  let <_cor4> =
+		      %% Line 9
+		      apply X
+			  ()
+		  in  let <_cor3> =
+			  %% Line 9
+			  apply 'inc'/1
+			      (3)
+		      in  %% Line 9
+			  call 'erlang':'-'
+			      (_cor4, _cor3)
+	  ( <_cor6,_cor5> when 'true' ->
+		( primop 'match_fail'
+		      ({'function_clause',_cor6,_cor5})
+		  -| [{'function_name',{'one',2}}] )
+	    -| ['compiler_generated'] )
+	end
+'fish'/1 =
+    %% Line 11
+    fun (_cor0) ->
+	let <X> =
+	    %% Line 12
+	    call 'erlang':'+'
+		(_cor0, 5)
+	in  do  %% Line 13
+		call 'erlang':'+'
+		    (X, _cor0)
+		%% Line 14
+		case 10 of
+		  <_cor5 = Y>
+		      when call 'erlang':'=:='
+			    (_cor5,
+			     _cor0) ->
+		      let <_cor3> =
+			  %% Line 15
+			  call 'erlang':'+'
+			      (Y, X)
+		      in  %% Line 15
+			  call 'erlang':'+'
+			      (_cor3, _cor0)
+		  ( <_cor2> when 'true' ->
+			primop 'match_fail'
+			    ({'badmatch',_cor2})
+		    -| ['compiler_generated'] )
+		end
+'module_info'/0 =
+    fun () ->
+	call 'erlang':'get_module_info'
+	    ('bazqux')
+'module_info'/1 =
+    fun (_cor0) ->
+	call 'erlang':'get_module_info'
+	    ('bazqux', _cor0)
+end

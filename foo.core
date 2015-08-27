@@ -1,0 +1,7 @@
+module 'foo' ['inc'/1, 'one'/2, 'module_info'/0, 'module_info'/1]
+attributes []
+'inc'/1 = fun ( _i ) -> call 'erlang':'+' ( 4 , _i )
+'one'/2 = fun ( _j , _k ) -> call 'erlang':'-' ( 1 , call 'erlang':'+' ( 3 , 2 ) )
+'module_info'/0 = fun () -> call 'erlang':'get_module_info' ('foo')
+'module_info'/1 = fun (_cor0) -> call 'erlang':'get_module_info' ('foo', _cor0)
+end

@@ -1,0 +1,16 @@
+(ns foobar)
+
+(defn+ inc (i)
+  (+ 1 i))
+
+(defn+ one (j k)
+  (- j (inc k)))
+
+(defn+ fish (j)
+  (let (x 1 y (+ x 1))
+    (+ y (+ x j))))
+
+(defn minimum (l)
+  (cond ((null? (cdr l)) (car l))
+        ((< (car lst) (minim (cdr lst))) (car lst))
+        (else (minim (cdr lst)))))

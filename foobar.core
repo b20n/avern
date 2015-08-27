@@ -1,0 +1,8 @@
+module 'foobar' ['inc'/1, 'one'/2, 'fish'/1, 'module_info'/0, 'module_info'/1]
+attributes []
+'inc'/1 = fun ( _i ) -> call 'erlang':'+' ( 1 , _i )
+'one'/2 = fun ( _j , _k ) -> call 'erlang':'-' ( _j , apply 'inc'/1 ( _k ) )
+'fish'/1 = fun ( _j ) -> let <_x> = 1 in let <_y> = call 'erlang':'+' ( _x , 1 ) in call 'erlang':'+' ( _y , call 'erlang':'+' ( _x , _j ) )
+'module_info'/0 = fun () -> call 'erlang':'get_module_info' ('foobar')
+'module_info'/1 = fun (_cor0) -> call 'erlang':'get_module_info' ('foobar', _cor0)
+end

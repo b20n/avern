@@ -1,0 +1,88 @@
+(foo (bar (baz 20 20) 30) (baz 100 200))
+
+Load foo to register 0
+Load bar to register 1
+Load baz to register 2
+Load 20 to register 3
+Load 20 to register 4
+Call register 2
+Load 30 to register 3
+Call register 1
+Load baz to register 2
+Load 100 to register 3
+Load 200 to register 4
+Call register 2
+Call register 0
+
+(foo (bar (baz 20 20) (qux 10 30)) (baz 100 200))
+
+Load foo to register 0
+Load bar to register 1
+Load baz to register 2
+Load 20 to register 3
+Load 20 to register 4
+Call register 2 (baz)
+Load qux to register 3
+Load 10 to register 4
+Load 30 to register 5
+Call register 3 (qux)
+Call register 1
+Load baz to register 2
+Load 100 to register 3
+Load 200 to register 4
+Call register 2
+Call register 0
+
+(foo (bar (baz 20 20) (qux 10 30)) (baz 100 200) (qux 5 10))
+
+Load foo to register 0
+Load bar to register 1
+Load baz to register 2
+Load 20 to register 3
+Load 20 to register 4
+Call register 2 (baz)
+Load qux to register 3
+Load 10 to register 4
+Load 30 to register 5
+Call register 3 (qux)
+Call register 1
+Load baz to register 2
+Load 100 to register 3
+Load 200 to register 4
+Call register 2
+Load qux to register 3
+Load 5 to register 4
+Load 10 to register 5
+Call register 3
+Call register 0
+
+(defn x ()
+  (foo (bar (baz 20 20) (qux 10 30))
+       (baz 100 200)
+       (qux 5 10)))
+
+;; A function
+
+(defn y (x)
+  (let (foo (fn () (+ x 1)))
+    (foo 45)))
+
+;; Converting the let to a lambda
+
+(defn y (x)
+  ((fn (i) (i 45))
+    (fn (j) (+ x j))))
+
+;; Replacing the free variable in the second closure with a partial application
+;; Partial lambda lift (avoiding the "lift to global scope" bit)
+
+(defn y (x)
+  ((fn (i) (i 45))
+    ((fn (j k) (+ j k)) x)))
+
+;; Conversion to CPS
+;; This isn't right, but not going to waste a lot of time on it for now.
+
+(defn y (cont x)
+  ((fn (cont i) (cont (i 45)))
+     ((fn (cont j k) (cont (+ j k))) cont x)))

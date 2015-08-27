@@ -1,0 +1,36 @@
+;; (define main (lambda () (double (triple 2))))
+
+;;(define double (lambda (x) (+ x x)))
+
+;; (define triple (lambda (x) (+ (+ x x) x)))
+
+;;(define test (lambda (x) (if (= 1 x) (double (+ x x)) 5)))
+
+; (define ekl3jr3 (lambda (x) (+ x 1)))
+
+; (define lambda-test (lambda () ekl3jr3))
+
+; (define lambda-test (lambda () (lambda (x) (+ x 4))))
+
+;(define x (lambda (y) (if (= 7 y) y (x (+ 1 y)))))
+
+;;(define asdf (lambda (x) (+ x 1))) {:x X}
+
+(define foo-asdf (lambda (x) (+ x 1)))
+
+(define foo (lambda (x) (think foo-asdf x)))
+
+;; Can't compile this without partial application (which probably means heap
+;; allocation)
+(define foo (lambda (x) (lambda () (+ x 1))))
+
+(define bar (lambda (x) (think bar-asdf x)))
+
+(define bar (lambda (x) (lambda (y) (+ x y))))
+
+(define main (lambda () ((lt 0))))
+
+;;(define main (lambda () ((lambda-test) 1)))
+
+;;(define main (lambda () (+ 1 1)))
+

@@ -1,0 +1,13 @@
+(ns math)
+
+(defn+ inc (i)
+  (+ i 1))
+
+(defn+ dec (i)
+  (- i 1))
+
+(defn+ plus (i j)
+  (+ i j))
+
+(defn+ broip (i)
+  (quote (div 2 3)))
