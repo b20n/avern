@@ -1,0 +1,77 @@
+# -*- mode: org -*-
+** Avern design notes
+*** On style
+- Think about aesthetics: in what ways can something be powerful without
+  feeling "heavy"?
+- Hackability and comprehensibility as primary goals: think about the Model T,
+  in the sense that Alan Kay talks about.
+*** On languages
+- We shouldn't be afraid to write programs that write programs
+- "Compiler" should stop being a scary term (and "transpiler" should go away
+  entirely).
+- Paraphrasing Butler Lampson: changing your programming language is like
+  adopting a different coordinate system. It's a powerful tool and should be
+  made more accessible/available to the everyday programmer. VPRI/Iam Piumarta
+  have gone down this route (COLA, OMETA) as have others (META-2, the LISP-70
+  pattern matching system, Racket) but it's not been widely adopted. It's also
+  unclear how to best present this faculty to the programmer; Scheme-style
+  macros could be one approach (particularly if the system generally encourages
+  sexp-based syntax, which I support as of this writing) but VPRI seems to be
+  pretty keen on PEGs for similar operations. I'm not yet sure how powerful a
+  change in *syntax* (vs semantics) is. Needs more consideration.
+- "Dropping to C" is a very significant semantic/mental leap for most
+  Erlang/Python/Ruby/Whatever programmers. It should be straightforward; the
+  programmer should be allowed and encouraged to use whatever language semantics
+  that he/she is looking for. This is something of an example of the previous
+  point, though in a virtual-machine/incrementally compiled world it's
+  necessarily something of an outlier, perhaps (that is, you probably wouldn't
+  want to compile this language to the VM's bytecode). Pre-scheme an obvious
+  inspiration/source of ideas here.
+- FFI between various languages should be non-magical and easily understood by
+  the average user.
+*** On runtimes
+- Most programming languages (unless they are very "large", like Java) treat the
+  runtime as a second-class citizen. Racket's runtime is 200,000 lines of C. GHC
+  (the compiler and runtime) are enormous. But taking the runtime seriously (and
+  thinking seriously about runtime) has significant consequences (see Erlang).
+- Make it comprehensible, and small. Leverage powerful abstractions and tools
+  (e.g., LLVM)
+- The compiler toolchain should be part of the runtime, not an isolated
+  component. Avoid whole-program analysis. Support hot code loading and REPL
+  interactivity.
+- Erlang's OTP is a really good idea and a powerful construct, but taking it to
+  its logical conclusion leads down the "why do I have an operating system?"
+  path. Not trying to reinvent the world here, and the operating systems have
+  powerful tools that should be leveraged, e.g., cgroups and other resources
+  allocation frameworks. The language should support individual systems that are
+  about as large as an Erlang "application", and the process supervision system
+  and RPC mechanism that provides the bridge to building larger systems should
+  exist as an application in its own right. This can then be taken to "extremes"
+  in the sense of distributed applications.
+- Still would like to take an actor-like approach to process scheduling and
+  communication: N:M lightweight thread processing, copying in message passing,
+  per-process GC, etc. Would also like to think about disambiguating parallelism
+  and concurrency: is it useful/sensible to allow some form of shared-memory
+  parallelism (in the sense of a fork-join pool) for strictly data-parallel
+  work, e.g., doubling an array of integers?
+*** On types
+- At the moment I don't have enough type theory to make any good judgement about
+  type systems in programming languages. I can't perceive an elegant,
+  constrained design with the tools I have at my disposal. Need to spend more
+  time with platforms with interesting type systems (Haskell, Rust, Idris, etc)
+  and do more reading.
+- The ideas in the linear/affine/dependent types realm are, I think very
+  interesting, as are Turner's thoughts on total functional programming.
+  Ideally, though, any type system on this platform is a property of _a_
+  language on the platform, and that language must play nice with others. No
+  idea how that would actually work. E.g., an you call Haskell code from C? This
+  suggests that perhaps the underlying system (at runtime) should be
+  untyped/unityped and typed sections/code should provide hints to the runtime
+  to aid code generation as in a gradually typed language. Probably should
+  investigate Bracha's work a lot more.
+- Proving the correctness of key bits of the system is probably a "good enough"
+  solution, if we can clearly demarcate the areas between proven correct code
+  and unproven code. Should do some research in to the perceived value among
+  users of Rust's "unsafe" feature, which is a similar idea.
+- Disambiguating types at the machine level and types at the mathematical logic
+  level still sounds like a good idea.
